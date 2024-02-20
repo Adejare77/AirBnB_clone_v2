@@ -9,6 +9,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 class BaseModel:
     """A base class for all hbnb models"""
 
@@ -59,4 +60,3 @@ class BaseModel:
     def delete(self):
         """deletes the current instance from the storage"""
         storage.delete(self)
-
