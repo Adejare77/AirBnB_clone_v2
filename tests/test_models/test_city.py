@@ -21,7 +21,6 @@ class test_City(test_basemodel):
         else:
             self.assertEqual(type(new_city.state_id), str)
 
-
     def test_name(self):
         """ type checking name of city object"""
         new = self.value()

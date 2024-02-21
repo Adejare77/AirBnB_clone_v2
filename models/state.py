@@ -5,7 +5,6 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 
-
 class State(BaseModel, Base):
     """ State class """
 
@@ -13,8 +12,8 @@ class State(BaseModel, Base):
 
     name = Column("name", String(128), nullable=False)
 
-    cities = relationship("City", back_populates="state", cascade="all, delete-orphan")
-
+    cities = relationship("City", back_populates="state",
+                          cascade="all, delete-orphan")
 
     @property
     def cities(self):
@@ -24,4 +23,3 @@ class State(BaseModel, Base):
             if self.id == city.state_id:
                 city_list.append(city)
         return city_list
-

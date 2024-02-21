@@ -7,7 +7,9 @@ from uuid import UUID
 import json
 import os
 
-@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', "basemodel not tested in db engine")
+
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                 "basemodel not tested in db engine")
 class test_basemodel(unittest.TestCase):
     """Test cases for the BaseModel class """
 

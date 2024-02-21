@@ -3,7 +3,7 @@
     It includes the use of ORM  """
 import uuid
 from datetime import datetime
-import models 
+import models
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import declarative_base
 
