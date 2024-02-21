@@ -18,5 +18,10 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-        return self.cities  
+        city_list = []
+        all_cities = storage.all(City).values()
+        for city in all_cities:
+            if self.id == city.state_id:
+                city_list.append(city)
+        return city_list
 
