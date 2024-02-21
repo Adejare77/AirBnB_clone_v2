@@ -29,10 +29,8 @@ class DBStorage:
         self.__engine = create_engine("""mysql+mysqldb://{}:{}@{}/{}""".format(
                                       user, passwd,host,db))
 
-        if user == "test":
+        if os.getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(bind=self.__engine) 
-
-        Base.metadata.create_all(bind=self.__engine) 
 
     def all(self, cls=None):
         """query on the database session"""
