@@ -13,7 +13,9 @@ import json
 import sqlalchemy
 from os import remove
 import os 
-
+import MySQLdb
+from models.city import City
+from models.base_model import BaseModel
 
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
                  "test of filestorage")
@@ -61,7 +63,7 @@ class TestCreate(unittest.TestCase):
 
 
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
-                 "test of database storage")
+                 "skipped test is for database storage")
 class TestCreateDB(unittest.TestCase):
     """ Testing the create command(db)
     Usage:
@@ -71,9 +73,35 @@ class TestCreateDB(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.console1 = HBNBCommand()
+        #call setup function , to populate table
+        
+        setup_conn = MySQLdb.connect(host=os.getenv('HBNB_MYSQL_HOST'),
+                                                user=os.getenv('HBNB_MYSQL_USER'),
+                                                passwd=os.getenv('HBNB_MYSQL_PWD'),
+                                                port=3306, db=os.getenv('HBNB_MYSQL_DB'))
+        cur = setup_conn.cursor()
+        cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (1, 1, 'San Francisco'), (2, 1, 'San Jose'), (3, 1, 'Los Angeles'), (4, 1, 'Fremont'), (5, 1, 'Livermore');")
+        # cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (1, 'San Francisco'), (1, 'San Jose'), (1, 'Los Angeles'), (1, 'Fremont'), (1, 'Livermore');")
+        # cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (2, 'Page'), (2, 'Phoenix');")
+        # cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (3, 'Dallas'), (3, 'Houston'), (3, 'Austin');")
+        # cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (4, 'New York');")
+        # cur.execute(f"INSERT INTO cities (id, state_id, name) VALUES (5, 'Las Vegas'), (5, 'Reno'), (5, 'Henderson'), (5, 'Carson City');")
 
+        setup_conn.commit()
+        cur.close()
+        setup_conn.close()
+        
     @classmethod
     def tearDownClass(self):
+        setup_conn = MySQLdb.connect(host=os.getenv('HBNB_MYSQL_HOST'),
+                                                user=os.getenv('HBNB_MYSQL_USER'),
+                                                passwd=os.getenv('HBNB_MYSQL_PWD'),
+                                                port=3306, db=os.getenv('HBNB_MYSQL_DB'))
+        cur = setup_conn.cursor()
+        cur.execute(f"DROP TABLE IF EXISTS cities")
+
+        cur.close()
+        setup_conn.close()
         del self.console1
 
     def test_create_class_successful(self):
@@ -81,17 +109,20 @@ class TestCreateDB(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             # use mysqldb to :
             # create connection and cursor
-            test_conn = MySQLdb.connect(host=os.getenv('HBNB__MYSQL_HOST'),
+            test_conn = MySQLdb.connect(host=os.getenv('HBNB_MYSQL_HOST'),
                                         user=os.getenv('HBNB_MYSQL_USER'),
                                         passwd=os.getenv('HBNB_MYSQL_PWD'),
                                         port=3306, db=os.getenv('HBNB_MYSQL_DB'))
             cur = test_conn.cursor()
-            
+
             # get current number of record in test table
+            num_rows = cur.rowcount
             # excecute console command
-            self.console1.onecmd(input_line) ud
             input_line = "create City name=Detroit"
-            # get new number of records and assert that the diff is +1            
-            id_string = output.getvalue().strip()
-            self.assertIn("")
+            self.console1.onecmd(input_line) 
+            # get new number of records and assert that the diff is +1 
+            num_rows2 = cur.rowcount
+            self.assertEqual((num_rows2 - num_rows), 1)           
+            # id_string = output.getvalue().strip()
+            # self.assertIn("")
 
