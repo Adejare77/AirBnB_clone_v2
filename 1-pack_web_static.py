@@ -13,7 +13,7 @@ def do_pack():
     try:
         # check if "version" directory exists
         if not os.path.exists("versions"):
-            local("mkdir -p versions")
+            os.makedirs("versions")
 
         # Gets the current full date and time
         date = dt.now().strftime("%Y%m%d%H%M%S")
