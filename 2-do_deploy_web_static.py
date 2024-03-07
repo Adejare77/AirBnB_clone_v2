@@ -23,54 +23,32 @@ def do_deploy(archive_path):
     # checks if the archive_path exists
     if os.path.isfile(archive_path) is False:
         return False
+    file = archive_path.split("/")[-1]
+    name = file.split(".")[0]
 
-    """
-    Rashisky: versions/web_static..., is a local path to the actual file
-    web_static.... So, versions/ wouldn't be uploaded but, the actual
-    file "web_static..." will be. Thus, the need to create archive_name
-    """
-    archive_name = archive_path.split("/")[-1]
-
-    # archive_name without extension
-    archive_folder = archive_name.split(".")[0]
-
-    # upload local file to remote sever
-    if put(archive_path, '/tmp/').failed:
+    if put(archive_path, "/tmp/{}".format(file)).failed is True:
         return False
-
-    # if run(f'rm -rf /data/web_static/releases/{archive_folder}').failed:
-    #     return False
-
-    # Creates the archive folder
-    if run(f'mkdir -p /data/web_static/releases/{archive_folder}').failed:
+    if run("rm -rf /data/web_static/releases/{}/".
+           format(name)).failed is True:
         return False
-
-    # extract archive to the created archive folder
-    if not run(f'tar -xzf /tmp/{archive_name} -C \
-               /data/web_static/releases/{archive_folder}').succeeded:
+    if run("mkdir -p /data/web_static/releases/{}/".
+           format(name)).failed is True:
         return False
-
-    # move all files inside archive_folder/web_static to archive folder
-    with cd(f'/data/web_static/releases/{archive_folder}/'):
-        if not run(f'mv web_static/* .').succeeded:
-            return False
-
-    # remove the archive_folder/web_static
-    with cd(f'/data/web_static/releases/{archive_folder}/'):
-        if not run(f'rm -rf web_static').succeeded:
-            return False
-
-    # remove the archive file
-    with cd('/tmp/'):
-        if not run(f'rm -rf {archive_name}').succeeded:
-            return False
-
-    if run('rm -rf /data/web_static/current').failed:
+    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+           format(file, name)).failed is True:
         return False
-
-    # Create a new link file "current"
-    if run(f'ln -s /data/web_static/releases/{archive_folder} \
-           /data/web_static/current').failed:
+    if run("rm /tmp/{}".format(file)).failed is True:
         return False
-
+    if run("mv /data/web_static/releases/{}/web_static/* "
+           "/data/web_static/releases/{}/".format(name, name)).failed is True:
+        return False
+    if run("rm -rf /data/web_static/releases/{}/web_static".
+           format(name)).failed is True:
+        return False
+    if run("rm -rf /data/web_static/current").failed is True:
+        return False
+    if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
+           format(name)).failed is True:
+        return False
     return True
+
