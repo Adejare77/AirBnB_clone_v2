@@ -38,13 +38,12 @@ def do_deploy(archive_path):
     if put(archive_path, '/tmp/').failed:
         return False
 
-    if run(f'rm -rf /data/web_static/releases/{archive_folder}').failed:
-        return False
+    # if run(f'rm -rf /data/web_static/releases/{archive_folder}').failed:
+    #     return False
 
     # Creates the archive folder
-    with cd('/data/web_static/releases/'):
-        if run(f'mkdir {archive_folder}').failed:
-            return False
+    if run(f'mkdir -p /data/web_static/releases/{archive_folder}').failed:
+        return False
 
     # extract archive to the created archive folder
     if not run(f'tar -xzf /tmp/{archive_name} -C \
@@ -58,7 +57,7 @@ def do_deploy(archive_path):
 
     # remove the archive_folder/web_static
     with cd(f'/data/web_static/releases/{archive_folder}/'):
-        if not run(f'rm -r web_static').succeeded:
+        if not run(f'rm -rf web_static').succeeded:
             return False
 
     # remove the archive file
