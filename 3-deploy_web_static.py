@@ -9,7 +9,9 @@ import os
 
 env.hosts = ['100.27.5.167', '54.157.180.169']
 
+
 def do_pack():
+    """Generate .tgz archive"""
     try:
         date = dt.now().strftime("%Y%m%d%H%M%S")
         if not os.path.exists("versions"):
@@ -18,11 +20,13 @@ def do_pack():
         archive_name = f"versions/web_static_{date}.tgz"
         local(f'tar -czvf {archive_name} web_static/')
         return archive_name
-    except:
+    except Exception:
         return False
+
 
 @task
 def do_deploy(archive_path):
+    """Distribute archive to web servers"""
     if not os.path.exists(archive_path):
         return False
     try:
@@ -81,4 +85,3 @@ def deploy():
     the function deploy"""
     archive_name = do_pack()
     return do_deploy(archive_name)
-

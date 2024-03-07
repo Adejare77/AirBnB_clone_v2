@@ -12,6 +12,7 @@ env.hosts = ['100.27.5.167', '54.157.180.169']
 
 @task
 def do_deploy(archive_path):
+    """Distributes archive to web servers"""
     if not os.path.exists(archive_path):
         return False
     try:
