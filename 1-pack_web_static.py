@@ -9,6 +9,7 @@ import os
 
 @task
 def do_pack():
+    """generate a .tgz archive"""
     try:
         # check if "version" directory exists
         if not os.path.exists("versions"):
