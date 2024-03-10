@@ -15,74 +15,72 @@ def do_deploy(archive_path):
     """Distributes archive to web servers"""
     if not os.path.exists(archive_path):
         return False
-    try:
-        """
-        Rashisky: versions/web_static..., is a local path to the actual file
-        web_static.... So, versions/ wouldn't be uploaded but, the actual
-        file "web_static..." will be. Thus, the need to create archive_name
-        """
-        archive_name = archive_path.split("/")[-1]
 
-        # archive_name without extension
-        archive_folder = archive_name.split(".")[0]
+    """
+    Rashisky: versions/web_static..., is a local path to the actual file
+    web_static.... So, versions/ wouldn't be uploaded but, the actual
+    file "web_static..." will be. Thus, the need to create archive_name
+    """
+    archive_name = archive_path.split("/")[-1]
 
-        # upload local file to remote sever
-        if put(archive_path, '/tmp/').failed:
-            return False
+    # archive_name without extension
+    archive_folder = archive_name.split(".")[0]
 
-        commands = f"""
-        if [ ! -e "/tmp/" ]; then
-            mkdir  -p "/tmp/";
-            if [! -e "/tmp/" ]; then
-                exit 1;
-            fi
-        fi
-
-        if ls /data/web_static/releases/web_static* > /dev/null 2>&1
-        then
-            rm -rf /data/web_static/releases/web_static*;
-        fi
-
-        if ! mkdir -p /data/web_static/releases/{archive_folder} > \
-            /dev/null 2>&1; then
-            exit 1;
-        fi
-
-        if ! tar -xzf /tmp/{archive_name} -C \
-            /data/web_static/releases/{archive_folder} > /dev/null 2>&1; then
-            exit 1;
-        fi
-
-        if ! mv -f /data/web_static/releases/{archive_folder}/web_static/* \
-            /data/web_static/releases/{archive_folder}/ > /dev/null 2>&1; then
-            exit 1;
-        fi
-
-        if ! rm -rf /data/web_static/releases/{archive_folder}/web_static/ \
-            > /dev/null 2>&1; then
-            exit 1;
-        fi
-
-        if ! rm -rf /tmp/{archive_name} > /dev/null 2>&1; then
-            exit 1;
-        fi
-
-        if [ -e "/data/web_static/current" ]
-        then
-            if ! rm -rf /data/web_static/current > /dev/null 2>&1; then
-                exit 1;
-            fi
-        fi
-
-        if ! ln -s /data/web_static/releases/{archive_folder} \
-            /data/web_static/current > /dev/null 2>&1; then
-            exit 1;
-        fi
-        """
-
-        run(commands)
-
-        return True
-
-    except Exception as e:
+    # upload local file to remote sever
+    if put(archive_path, '/tmp/').failed:
         return False
+
+    commands = f"""
+    if [ ! -e "/tmp/" ]; then
+        mkdir  -p "/tmp/";
+        if [! -e "/tmp/" ]; then
+            exit 1;
+        fi
+    fi
+
+    if ls /data/web_static/releases/web_static* > /dev/null 2>&1
+    then
+        rm -rf /data/web_static/releases/web_static*;
+    fi
+
+    if ! mkdir -p /data/web_static/releases/{archive_folder} > \
+        /dev/null 2>&1; then
+        exit 1;
+    fi
+
+    if ! tar -xzf /tmp/{archive_name} -C \
+        /data/web_static/releases/{archive_folder} > /dev/null 2>&1; then
+        exit 1;
+    fi
+
+    if ! mv -f /data/web_static/releases/{archive_folder}/web_static/* \
+        /data/web_static/releases/{archive_folder}/ > /dev/null 2>&1; then
+        exit 1;
+    fi
+
+    if ! rm -rf /data/web_static/releases/{archive_folder}/web_static/ \
+        > /dev/null 2>&1; then
+        exit 1;
+    fi
+
+    if ! rm -rf /tmp/{archive_name} > /dev/null 2>&1; then
+        exit 1;
+    fi
+
+    if [ -e "/data/web_static/current" ]
+    then
+        if ! rm -rf /data/web_static/current > /dev/null 2>&1; then
+            exit 1;
+        fi
+    fi
+
+    if ! ln -s /data/web_static/releases/{archive_folder} \
+        /data/web_static/current > /dev/null 2>&1; then
+        exit 1;
+    fi
+    """
+
+    if run(commands).failed:
+        return False
+
+    return True
