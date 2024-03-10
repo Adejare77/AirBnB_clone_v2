@@ -26,7 +26,6 @@ def do_deploy(archive_path):
         # archive_name without extension
         archive_folder = archive_name.split(".")[0]
 
-
         # upload local file to remote sever
         if put(archive_path, '/tmp/').failed:
             return False
