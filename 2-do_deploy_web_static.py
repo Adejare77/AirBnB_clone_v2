@@ -36,22 +36,19 @@ def do_deploy(archive_path):
             mkdir  -p "/tmp/";
         fi
 
-        if [ -e "/data/web_static/releases/{archive_folder}" ]
+        if ls /data/web_static/releases/web_static* > /dev/null 2>&1
         then
-            rm -rf /data/web_static/releases/{archive_folder};
+            rm -rf /data/web_static/releases/web_static*;
         fi
 
         mkdir -p /data/web_static/releases/{archive_folder};
 
-        if [ -e "/data/web_static/releases/{archive_folder}" ]
-        then
-            rm -rf /data/web_static/releases/{archive_folder};
-        fi
-
         tar -xzf /tmp/{archive_name} -C \
             /data/web_static/releases/{archive_folder};
 
-        mv -f /data/web_static/releases/{archive_folder}/web_static/* \
+
+
+        mv /data/web_static/releases/{archive_folder}/web_static/* \
             /data/web_static/releases/{archive_folder}/;
 
         rm -rf /data/web_static/releases/{archive_folder}/web_static/;
@@ -67,7 +64,7 @@ def do_deploy(archive_path):
             /data/web_static/current;
         """
 
-        run(commands, warn_only=True, quiet=True)
+        run(commands)
 
         return True
 
