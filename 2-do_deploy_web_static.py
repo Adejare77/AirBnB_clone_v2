@@ -28,12 +28,15 @@ def do_deploy(archive_path):
 
 
         # upload local file to remote sever
-        put(archive_path, '/tmp/')
+        if put(archive_path, '/tmp/').failed:
+            return False
 
         commands = f"""
-        if [ ! -e "/tmp/" ]
-        then
+        if [ ! -e "/tmp/" ]; then
             mkdir  -p "/tmp/";
+            if [! -e "/tmp/" ]; then
+                exit 1;
+            fi
         fi
 
         if ls /data/web_static/releases/web_static* > /dev/null 2>&1
@@ -41,27 +44,41 @@ def do_deploy(archive_path):
             rm -rf /data/web_static/releases/web_static*;
         fi
 
-        mkdir -p /data/web_static/releases/{archive_folder};
+        if ! mkdir -p /data/web_static/releases/{archive_folder} > \
+            /dev/null 2>&1; then
+            exit 1;
+        fi
 
-        tar -xzf /tmp/{archive_name} -C \
-            /data/web_static/releases/{archive_folder};
+        if ! tar -xzf /tmp/{archive_name} -C \
+            /data/web_static/releases/{archive_folder} > /dev/null 2>&1; then
+            exit 1;
+        fi
 
+        if ! mv -f /data/web_static/releases/{archive_folder}/web_static/* \
+            /data/web_static/releases/{archive_folder}/ > /dev/null 2>&1; then
+            exit 1;
+        fi
 
+        if ! rm -rf /data/web_static/releases/{archive_folder}/web_static/ \
+            > /dev/null 2>&1; then
+            exit 1;
+        fi
 
-        mv /data/web_static/releases/{archive_folder}/web_static/* \
-            /data/web_static/releases/{archive_folder}/;
-
-        rm -rf /data/web_static/releases/{archive_folder}/web_static/;
-
-        rm -rf /tmp/{archive_name};
+        if ! rm -rf /tmp/{archive_name} > /dev/null 2>&1; then
+            exit 1;
+        fi
 
         if [ -e "/data/web_static/current" ]
         then
-            rm -rf /data/web_static/current;
+            if ! rm -rf /data/web_static/current > /dev/null 2>&1; then
+                exit 1;
+            fi
         fi
 
-        ln -s /data/web_static/releases/{archive_folder} \
-            /data/web_static/current;
+        if ! ln -s /data/web_static/releases/{archive_folder} \
+            /data/web_static/current > /dev/null 2>&1; then
+            exit 1;
+        fi
         """
 
         run(commands)
