@@ -78,6 +78,8 @@ def do_deploy(archive_path):
         /data/web_static/current > /dev/null 2>&1; then
         exit 1;
     fi
+
+    sudo service nginx restart;
     """
 
     if run(commands).failed:
