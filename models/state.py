@@ -12,9 +12,9 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     # This is for DBStorage
     cities = relationship("City", cascade="all, delete, delete-orphan",
-                        backref="state")
+                          backref="state")
 
-# This is for FileStorage
+    # This is for FileStorage
     @property
     def cities(self):
         """returns list of City instances with state_id
@@ -25,8 +25,10 @@ class State(BaseModel, Base):
         all_objs = storage.all()
         list_cities = []
         for k, v in all_objs.items():
-            # since State.id is the primary key to City.state_id
-            # Recall, v is an instance and not a dictionary, thus, v.__dict__['...']
-            if (k.split(".")[0] == "City" and self.id == v.__dict__['state_id']):
+            """ since State.id is the primary key to City.state_id
+            Recall, v is an instance and not a dictionary, thus,
+            v.__dict__['...']"""
+            if (k.split(".")[0] == "City" and self.id ==
+               v.__dict__['state_id']):
                 list_cities.append(v)
         return list_cities
