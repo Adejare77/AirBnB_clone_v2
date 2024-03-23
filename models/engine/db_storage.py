@@ -47,8 +47,6 @@ class DBStorage:
                 data = self.__session.query(_cls)
                 for sql_stment in data:
                     key = type(sql_stment).__name__ + "." + sql_stment.id
-                    print(key, sql_stment, sep="=:")
-                    objects.update({key: sql_stment})
                     objects.update({key: sql_stment})
 
         for value in objects.values():
