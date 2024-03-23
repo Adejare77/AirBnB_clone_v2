@@ -80,10 +80,7 @@ class DBStorage:
         # preventing conflicts and ensuring thread safety
         self.__session = scoped_session(Session)()
 
-    def remove(self):
-        """remove private attribute session attribute (self.__session)"""
-        self.__session.close()
 
     def close(self):
         """ close on the class Session """
-        self.remove()
+        self.__session.close()
