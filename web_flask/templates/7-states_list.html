@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<HTML lang="en">
+    <HEAD>
+        <TITLE>HBNB</TITLE>
+    </HEAD>
+    <BODY>
+        {% for state_id, state_name in state_dict.items() %}
+        <LI> {{ state_id }}: {{ state_name }} </LI>
+        {% endfor %}
+    </BODY>
+</HTML>
