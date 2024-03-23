@@ -5,14 +5,14 @@ from models import storage
 from flask import Flask, render_template
 from models.state import State
 
-all_objs = storage.all(State)
 app = Flask(__name__)
 
 
 @app.route("/states_list", strict_slashes=False)
 def list_state():
     """ list State and their Cities in sorted order """
-    return render_template('7-states_list.html', states=all_objs)
+    states = storage.all(State)
+    return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
