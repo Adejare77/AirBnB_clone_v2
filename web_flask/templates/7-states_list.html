@@ -4,8 +4,11 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-        {% for state_id, state_name in state_dict.items() %}
-        <LI> {{ state_id }}: {{ state_name }} </LI>
-        {% endfor %}
+        <H1>States</H1>
+        <UL>
+            {% for state_id, state in states.items() %}
+                <LI> {{ state_id.split(".")[1] }}: <B>{{ state.name }}</B></LI>
+            {% endfor %}
+        </UL>
     </BODY>
 </HTML>
