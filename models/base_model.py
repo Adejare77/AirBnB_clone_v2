@@ -47,8 +47,17 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
+        """
+        Since, every instance inherits from Base=declarative_base(), then by
+        default, they'll inherits "_sa_instance_state" into their dictionary.
+        But, I don't want this _sa_instance_state to be printed, thus the purpose
+        of making a copy
+        """
+        dict_copy = self.__dict__.copy()
+        if hasattr(self, "_sa_instance_state"):
+            del dict_copy['_sa_instance_state']
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        return '[{}] ({}) {}'.format(cls, self.id, dict_copy)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""

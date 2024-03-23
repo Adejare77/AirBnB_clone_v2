@@ -75,8 +75,17 @@ class DBStorage:
         """create all tables in the database (feature of SQLAlchemy)"""
         # create all tables from the engine
         Base.metadata.create_all(self.__engine)
-        # expired_on_commit=False disables automatic refresh of DB on commit
+        # expired_on_commit=False disables automatic refresh of session on commit
         Session = sessionmaker(self.__engine, expire_on_commit=False)
         # ensures  each thread has its own unique session object,
         # preventing conflicts and ensuring thread safety
         self.__session = scoped_session(Session)()
+
+
+    def remove(self):
+        """remove private attribute session attribute (self.__session)"""
+        self.__session.close_all()
+
+    def close(self):
+        """ close on the class Session """
+        self.remove()
