@@ -9,6 +9,10 @@ from os import getenv
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
+    # This enforces a character encoding latin1 on the columns
+    __table_args__ = {
+        'mysql_charset': 'latin1'
+    }
     name = Column(String(128), nullable=False)
     # This is for DBStorage
     cities = relationship("City", cascade="all, delete, delete-orphan",
@@ -16,7 +20,7 @@ class State(BaseModel, Base):
 
     # This is for FileStorage
     @property
-    def cities(self):
+    def cities(self) -> list:
         """returns list of City instances with state_id
         equals to the current State.id. It will be the
         FileStorage relationship between State and City

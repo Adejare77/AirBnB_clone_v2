@@ -50,8 +50,8 @@ class BaseModel:
         """
         Since, every instance inherits from Base=declarative_base(), then by
         default, they'll inherits "_sa_instance_state" into their dictionary.
-        But, I don't want this _sa_instance_state to be printed, thus the purpose
-        of making a copy
+        But, I don't want this _sa_instance_state to be printed, thus
+        the purpose of making a copy
         """
         dict_copy = self.__dict__.copy()
         if hasattr(self, "_sa_instance_state"):

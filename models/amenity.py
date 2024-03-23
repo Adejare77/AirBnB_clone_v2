@@ -11,3 +11,6 @@ class Amenity(BaseModel, Base):
     name = Column(String(128), nullable=False)
     # I commented below because I've backref it from place.py
     # place_amenities = relationship("Place", secondary=place_amenity)
+    __table_args__ = {
+        'mysql_charset': 'latin1'
+    }
