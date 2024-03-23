@@ -12,7 +12,7 @@ place_amenity = Table('place_amenity', Base.metadata,
                       Column('amenity_id', String(60),
                              ForeignKey('amenities.id'), primary_key=True,
                              nullable=False),
-                      mysql_charset='latin1'  # enforces charset latin1 enc
+                    #   mysql_charset='latin1'  # enforces charset latin1 enc
                       )
 
 
@@ -20,9 +20,9 @@ class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = "places"
     # This enforces a character encoding latin1 on the columns
-    __table_args__ = {
-        'mysql_charset': 'latin1'
-    }
+    # __table_args__ = {
+    #     'mysql_charset': 'latin1'
+    # }
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)

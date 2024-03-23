@@ -20,7 +20,7 @@ class DBStorage:
     __session = None
 
     def __init__(self) -> None:
-        db_info = 'mysql+mysqldb://{}:{}@{}:3306/{}?charset=latin1'.format(
+        db_info = 'mysql+mysqldb://{}:{}@{}:3306/{}'.format(
             getenv('HBNB_MYSQL_USER'),
             getenv('HBNB_MYSQL_PWD'),
             getenv('HBNB_MYSQL_HOST'),
