@@ -17,7 +17,7 @@ class State(BaseModel, Base):
     # This is for DBStorage
     if ('HBNB_TYPE_STORAGE' == 'db'):
         cities = relationship("City", cascade="all, delete, delete-orphan",
-                            backref="state")
+                              backref="state")
 
     # This is for FileStorage
     else:
@@ -35,6 +35,6 @@ class State(BaseModel, Base):
                 Recall, v is an instance and not a dictionary, thus,
                 v.__dict__['...']"""
                 if (k.split(".")[0] == "City" and self.id ==
-                v.__dict__['state_id']):
+                   v.__dict__['state_id']):
                     list_cities.append(v)
             return list_cities
