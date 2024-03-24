@@ -10,9 +10,9 @@ class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
     # This enforces a character encoding latin1 on the columns
-    # __table_args__ = {
-    #     'mysql_charset': 'latin1'
-    # }
+    __table_args__ = {
+        'mysql_charset': 'latin1'
+    }
     name = Column(String(128), nullable=False)
 
     # This is for DBStorage
