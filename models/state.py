@@ -15,26 +15,24 @@ class State(BaseModel, Base):
     # }
     name = Column(String(128), nullable=False)
     # This is for DBStorage
-    if ('HBNB_TYPE_STORAGE' == 'db'):
-        cities = relationship("City", cascade="all, delete, delete-orphan",
-                              backref="state")
+    cities = relationship("City", cascade="all, delete, delete-orphan",
+                          backref="state")
 
     # This is for FileStorage
-    else:
-        @property
-        def cities(self) -> list:
-            """returns list of City instances with state_id
-            equals to the current State.id. It will be the
-            FileStorage relationship between State and City
-            """
-            from models import storage
-            all_objs = storage.all()
-            list_cities = []
-            for k, v in all_objs.items():
-                """ since State.id is the primary key to City.state_id
-                Recall, v is an instance and not a dictionary, thus,
-                v.__dict__['...']"""
-                if (k.split(".")[0] == "City" and self.id ==
-                   v.__dict__['state_id']):
-                    list_cities.append(v)
-            return list_cities
+    @property
+    def cities(self) -> list:
+        """returns list of City instances with state_id
+        equals to the current State.id. It will be the
+        FileStorage relationship between State and City
+        """
+        from models import storage
+        all_objs = storage.all()
+        list_cities = []
+        for k, v in all_objs.items():
+            """ since State.id is the primary key to City.state_id
+            Recall, v is an instance and not a dictionary, thus,
+            v.__dict__['...']"""
+            if (k.split(".")[0] == "City" and self.id ==
+               v.__dict__['state_id']):
+                list_cities.append(v)
+        return list_cities
