@@ -15,10 +15,10 @@ def list_state():
     return render_template('7-states_list.html', states=states)
 
 
-# @app.teardown_appcontext
-# def close(e):
-#     """ close session """
-#     storage.close()
+@app.teardown_appcontext
+def teardown(e):
+    """ close current session """
+    storage.close()
 
 
 if __name__ == '__main__':
