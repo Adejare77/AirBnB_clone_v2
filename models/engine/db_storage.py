@@ -80,7 +80,6 @@ class DBStorage:
         # preventing conflicts and ensuring thread safety
         self.__session = scoped_session(Session)()
 
-
     def close(self):
         """ close on the class Session """
         self.__session.close()
