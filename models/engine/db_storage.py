@@ -50,10 +50,6 @@ class DBStorage:
                     key = type(sql_stment).__name__ + "." + sql_stment.id
                     objects.update({key: sql_stment})
 
-        for value in objects.values():
-            # We don't want _sa_instance_state (default) present in our objects
-            if value.__dict__.get('_sa_instance_state'):
-                del [value.__dict__['_sa_instance_state']]
         return objects
 
     def new(self, obj):
@@ -83,7 +79,7 @@ class DBStorage:
 
     def remove(self):
         """ close private session attribute"""
-        self.__session.close()
+        self.__session.close_all()
 
     def close(self):
         """ remove method on the private session attribute """
