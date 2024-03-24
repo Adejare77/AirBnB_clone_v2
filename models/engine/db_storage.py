@@ -34,6 +34,7 @@ class DBStorage:
         """query on the current database session (self.__session)
         all objects depending of the class"""
         objects = {}
+        cls = eval(cls) if (type(cls) == str) else cls
         if cls:
             # Returns a SQL statement into data which contains all rows data
             data = self.__session.query(cls)
@@ -80,6 +81,10 @@ class DBStorage:
         # preventing conflicts and ensuring thread safety
         self.__session = scoped_session(Session)()
 
-    def close(self):
-        """ close on the class Session """
+    def remove(self):
+        """ close private session attribute"""
         self.__session.close()
+
+    def close(self):
+        """ remove method on the private session attribute """
+        self.remove()
