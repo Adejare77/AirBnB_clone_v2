@@ -1,25 +1,24 @@
 #!/usr/bin/python3
-"""
-start Flask application
-"""
+""" Starts a Flask web Application """
 
-from flask import Flask, render_template
-from models import *
 from models import storage
+from flask import Flask, render_template
+
 app = Flask(__name__)
+states = storage.all("State")
 
 
-@app.route('/states_list', strict_slashes=False)
-def states_list():
-    """display a HTML page with the states listed in alphabetical order"""
-    states = sorted(list(storage.all("State").values()), key=lambda x: x.name)
+@app.route("/states_list", strict_slashes=False)
+def list_state():
+    """ list State and their Cities in sorted order """
     return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
-def teardown_db(exception):
-    """closes the storage on teardown"""
+def teardown(e):
+    """ close current session """
     storage.close()
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0', port=5000)
